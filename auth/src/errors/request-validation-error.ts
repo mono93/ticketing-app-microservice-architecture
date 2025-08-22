@@ -12,8 +12,7 @@ export class RequestValidationError extends CustomError {
   }
 
   serializeErrors() {
-    const uniqueErrors: Record<string, { message: string; field?: string }> =
-      {};
+    const uniqueErrors: Record<string, { message: string; field?: string }> = {};
 
     for (const err of this.errors) {
       if (err.type === "field") {

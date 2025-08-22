@@ -34,11 +34,6 @@ const handleSignup = async (req: Request, res: Response) => {
   res.status(201).send(user);
 };
 
-router.post(
-  "/api/users/signup",
-  signupValidation,
-  validateRequest,
-  handleSignup
-);
+router.post("/api/users/signup", signupValidation, validateRequest, handleSignup);
 
 export { router as signupRouter };

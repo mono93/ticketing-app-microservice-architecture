@@ -20,10 +20,7 @@ const handleSignin = async (req: Request, res: Response) => {
   if (!existingUser) {
     throw new BadRequestError("Invalid credentials");
   } else {
-    const passwordMatch = await Password.compare(
-      existingUser.password,
-      password
-    );
+    const passwordMatch = await Password.compare(existingUser.password, password);
     if (!passwordMatch) {
       throw new BadRequestError("Invalid credentials");
     }
@@ -33,7 +30,7 @@ const handleSignin = async (req: Request, res: Response) => {
         id: existingUser._id,
         email: existingUser.email,
       },
-      process.env.JWT_KEY! // Ensure JWT_KEY is set in environment variables
+      process.env.JWT_KEY!, // Ensure JWT_KEY is set in environment variables
     );
 
     req.session = {
@@ -44,11 +41,6 @@ const handleSignin = async (req: Request, res: Response) => {
   }
 };
 
-router.post(
-  "/api/users/signin",
-  signinValidation,
-  validateRequest,
-  handleSignin
-);
+router.post("/api/users/signin", signinValidation, validateRequest, handleSignin);
 
 export { router as signinRouter };
