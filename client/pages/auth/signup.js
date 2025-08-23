@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Router from 'next/router';
 import useRequest from '../../hooks/use-request';
 
@@ -12,7 +12,7 @@ export default () => {
       email,
       password
     },
-    onSuccess: () => Router.push('/')
+    onSuccess: () => Router.push('/auth/signin')
   });
 
   const onSubmit = async event => {
@@ -42,7 +42,7 @@ export default () => {
         />
       </div>
       {errors}
-      <button className="btn btn-primary">Sign Up</button>
+      <button className="btn btn-primary" style={{marginTop: '9px'}}>Sign Up</button>
     </form>
   );
 };
