@@ -2,8 +2,13 @@ import express from "express";
 import "express-async-errors";
 import cookieSession from "cookie-session";
 
-import { currentUserRouter, signinRouter, signoutRouter, signupRouter } from "./routes";
-import { errorHandler, NotFoundError } from "@mstickets93/common";
+import { currentUser, errorHandler, NotFoundError } from "@mstickets93/common";
+import {
+  createTicketRouter,
+  showTicketRouter,
+  indexTicketRouter,
+  updateTicketRouter,
+} from "./routes";
 
 const app = express();
 app.set("trust proxy", true);
@@ -14,11 +19,12 @@ app.use(
     secure: process.env.NODE_ENV !== "test",
   }),
 );
+app.use(currentUser);
 
-app.use(currentUserRouter);
-app.use(signinRouter);
-app.use(signoutRouter);
-app.use(signupRouter);
+app.use(createTicketRouter);
+app.use(showTicketRouter);
+app.use(indexTicketRouter);
+app.use(updateTicketRouter);
 
 app.all("*", async (req, res) => {
   throw new NotFoundError();

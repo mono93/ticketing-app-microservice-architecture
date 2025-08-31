@@ -19,7 +19,7 @@ export default ({ currentUser }) => {
 
   return (
     <nav className="navbar navbar-light bg-light">
-      <Link className="navbar-brand" style={{'margin-left': '10px'}} href="/">
+      <Link className="navbar-brand" style={{'marginLeft': '10px'}} href="/">
         GitTix
       </Link>
 

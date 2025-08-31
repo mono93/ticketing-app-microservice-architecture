@@ -1,0 +1,34 @@
+import express, { Request, Response } from "express";
+import { body } from "express-validator";
+import { validateRequest, requireAuth } from "@mstickets93/common";
+import { Ticket } from "../models/ticket";
+
+const router = express.Router();
+
+const createTicketValidation = [
+  body("title").not().isEmpty().withMessage("Title is required"),
+  body("price").isFloat({ gt: 0 }).withMessage("Price must be greater than 0"),
+];
+
+const handleCreateTicket = async (req: Request, res: Response) => {
+  const { title, price } = req.body;
+
+  const ticket = Ticket.build({
+    title,
+    price,
+    userId: req.currentUser!.id,
+  });
+  await ticket.save();
+
+  res.status(201).send(ticket);
+};
+
+router.post(
+  "/api/tickets",
+  requireAuth,
+  createTicketValidation,
+  validateRequest,
+  handleCreateTicket,
+);
+
+export { router as createTicketRouter };
