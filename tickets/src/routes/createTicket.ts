@@ -25,7 +25,8 @@ const handleCreateTicket = async (req: Request, res: Response) => {
     id: ticket.id,
     title: ticket.title,
     price: ticket.price,
-    userId: ticket.userId
+    userId: ticket.userId,
+    version: ticket.version
   })
 
   res.status(201).send(ticket);
