@@ -5,6 +5,7 @@ import {
   NotFoundError,
   requireAuth,
   NotAuthorizedError,
+  BadRequestError,
 } from "@mstickets93/common";
 import { Ticket } from "../models/ticket";
 import { TicketUpdatedPublisher } from "../events/publishers/ticket-updated-publisher";
@@ -24,6 +25,10 @@ const handleCreateTicket = async (req: Request, res: Response) => {
     throw new NotFoundError();
   }
 
+  if (ticket.orderId) {
+    throw new BadRequestError("Cannot edit a reserved ticket");
+  }
+
   if (ticket.userId !== req.currentUser!.id) {
     throw new NotAuthorizedError();
   }
@@ -38,7 +43,7 @@ const handleCreateTicket = async (req: Request, res: Response) => {
     title: ticket.title,
     price: ticket.price,
     userId: ticket.userId,
-    version: ticket.version
+    version: ticket.version,
   });
 
   res.send(ticket);
