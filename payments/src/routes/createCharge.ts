@@ -9,6 +9,10 @@ import {
   OrderStatus,
 } from "@mstickets93/common";
 import { Order } from "../models/order";
+import { stripe } from "../stripe";
+import { PaymentCreatedPublisher } from "../events/publishers/payment-created-publisher";
+import { natsWrapper } from "../nats-wrapper";
+import { Payment } from "../models/payment";
 
 const router = express.Router();
 
@@ -31,8 +35,25 @@ const handleCreateCharge = async (req: Request, res: Response) => {
   if (order.status === OrderStatus.Cancelled) {
     throw new BadRequestError("Cannot pay for an cancelled order");
   }
-
-  res.send({ success: true });
+  /*****
+   * Deprecated method
+   * TODO need to update using payment intent
+  const charge = await stripe.charges.create({
+    currency: "usd",
+    amount: order.price * 100,
+    source: token,
+  });
+   */
+  const payment = Payment.build({
+    orderId,
+    stripeId: 'random charge id',
+  });
+  await payment.save();
+  new PaymentCreatedPublisher(natsWrapper.client).publish({
+    id: payment.id,
+    orderId: payment.orderId,
+    stripeId: payment.stripeId,
+  });
 };
 
 router.post(
